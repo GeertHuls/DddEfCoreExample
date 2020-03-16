@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server
+    container_name: dddefcore-db
+    ports: 
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=V3ryStr0ngPa55!
+
+volumes:
+  sqldata1:
+    name: dddefcore-data
