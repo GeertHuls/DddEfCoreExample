@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
+using DbUp;
 using Microsoft.Extensions.Configuration;
 
 namespace DddEfCoreExample
@@ -8,11 +10,32 @@ namespace DddEfCoreExample
     {
         static void Main(string[] args)
         {
-
             var connectionString = GetConnectionString();
+            
+            InitDatabase(connectionString);
+        }
 
-            Console.WriteLine("Hello World! " + connectionString);
-            Console.ReadLine();
+        private static void InitDatabase(string connectionString)
+        {
+            EnsureDatabase.For.SqlDatabase(connectionString);
+
+            var upgrader =
+                DeployChanges.To
+                    .SqlDatabase(connectionString)
+                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                    .LogToConsole()
+                    .Build();
+
+            var result = upgrader.PerformUpgrade();        
+
+            if (result.Successful)
+            {
+                Console.WriteLine("Database migration was successful!");
+            }
+            else
+            {
+                Console.WriteLine("Database migration failed.");
+            }
         }
 
         private static string GetConnectionString()
