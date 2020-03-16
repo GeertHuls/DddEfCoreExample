@@ -16,29 +16,10 @@ namespace DddEfCoreExample
             
             InitDatabase(connectionString);
 
-            ILoggerFactory loggerFactory = CreateLoggerFactory();
-
-            var optionsBuilder = new DbContextOptionsBuilder<SchoolContext>();
-            optionsBuilder
-                .UseSqlServer(connectionString)
-                .UseLoggerFactory(loggerFactory)
-                .EnableSensitiveDataLogging();
-
-            using (var context = new SchoolContext(optionsBuilder.Options))
+            using (var context = new SchoolContext(connectionString, true))
             {
                 Student student = context.Students.Find(1L);
             }
-        }
-
-        private static ILoggerFactory CreateLoggerFactory()
-        {
-            return LoggerFactory.Create(builder =>
-            {
-                builder
-                    .AddFilter((category, level) =>
-                        category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
-                    .AddConsole();
-            });
         }
 
         private static void InitDatabase(string connectionString)
