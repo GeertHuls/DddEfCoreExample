@@ -2,9 +2,7 @@
 using System.IO;
 using System.Reflection;
 using DbUp;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace DddEfCoreExample
 {
