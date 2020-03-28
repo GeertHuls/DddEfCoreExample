@@ -34,7 +34,8 @@ namespace DddEfCoreExample
             {
                 optionsBuilder
                     .UseLoggerFactory(loggerFactory)
-                    .EnableSensitiveDataLogging();
+                    .EnableSensitiveDataLogging()
+                    .UseLazyLoadingProxies();
             }
         }
 

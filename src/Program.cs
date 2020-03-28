@@ -19,7 +19,6 @@ namespace DddEfCoreExample
             using (var context = new SchoolContext(connectionString, true))
             {
                 Student student = context.Students
-                    .Include(x => x.FavoriteCourse)
                     .SingleOrDefault(x => x.Id == 1);
             }
         }
