@@ -1,6 +1,5 @@
-using DddEfCoreExample;
 
-namespace ADddEfCoreExamplepp
+namespace DddEfCoreExample
 {
     public class Enrollment : Entity
     {

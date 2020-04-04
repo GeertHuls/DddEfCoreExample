@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace DddEfCoreExample
 {
     public class Student : Entity
@@ -6,6 +8,7 @@ namespace DddEfCoreExample
         public string Email { get; private set; }
         public virtual Course FavoriteCourse { get; private set; }
 
+        public virtual ICollection<Enrollment> Enrollments { get; set; }
 
         protected Student()
         {

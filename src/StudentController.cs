@@ -1,3 +1,4 @@
+
 namespace DddEfCoreExample
 {
     public sealed class StudentController
@@ -21,6 +22,5 @@ namespace DddEfCoreExample
 
             return student.FavoriteCourse == course ? "Yes" : "No";
         }
-
     }
 }
