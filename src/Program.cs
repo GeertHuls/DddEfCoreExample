@@ -10,6 +10,7 @@ namespace DddEfCoreExample
     {
         static void Main(string[] args)
         {
+            string result2 = Execute(x => x.AddEnrollment(1, 2, Grade.A));
             string result = Execute(x => x.CheckStudentFavoriteCourse(1, 2));
         }
 

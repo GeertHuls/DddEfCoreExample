@@ -22,5 +22,22 @@ namespace DddEfCoreExample
 
             return student.FavoriteCourse == course ? "Yes" : "No";
         }
+
+        public string AddEnrollment(long studentId, long courseId, Grade grade)
+        {
+            Student student = _context.Students.Find(studentId);
+            if (student == null)
+                return "Student not found";
+
+            Course course = Course.FromId(courseId);
+            if (course == null)
+                return "Course not found";
+
+            student.Enrollments.Add(new Enrollment(course, student, grade));
+
+            _context.SaveChanges();
+
+            return "OK";
+        }
     }
 }
