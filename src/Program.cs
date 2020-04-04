@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using DbUp;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,12 @@ namespace DddEfCoreExample
             using (var context = new SchoolContext(connectionString, true))
             {
                 Student student = context.Students.Find(1L);
+                var course = student.FavoriteCourse;
+
+                var course2 = context.Courses.SingleOrDefault(x => x.Id == 2L);
+
+                var isEqual = course == course2;
+                var isEqual2 = course2 == Course.Chemistry;
             }
         }
 
