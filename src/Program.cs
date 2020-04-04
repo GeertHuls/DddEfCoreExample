@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using DbUp;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace DddEfCoreExample
@@ -18,8 +16,7 @@ namespace DddEfCoreExample
 
             using (var context = new SchoolContext(connectionString, true))
             {
-                Student student = context.Students
-                    .SingleOrDefault(x => x.Id == 1);
+                Student student = context.Students.Find(1L);
             }
         }
 
