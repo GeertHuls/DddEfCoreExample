@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using DbUp;
 using Microsoft.Extensions.Configuration;
@@ -11,19 +10,17 @@ namespace DddEfCoreExample
     {
         static void Main(string[] args)
         {
-            var connectionString = GetConnectionString();
-            
-            InitDatabase(connectionString);
+            string result = Execute(x => x.CheckStudentFavoriteCourse(1, 2));
+        }
+
+        private static string Execute(Func<StudentController, string> func)
+        {
+            string connectionString = GetConnectionString();
 
             using (var context = new SchoolContext(connectionString, true))
             {
-                Student student = context.Students.Find(1L);
-                var course = student.FavoriteCourse;
-
-                var course2 = context.Courses.SingleOrDefault(x => x.Id == 2L);
-
-                var isEqual = course == course2;
-                var isEqual2 = course2 == Course.Chemistry;
+                var controller = new StudentController(context);
+                return func(controller);
             }
         }
 
