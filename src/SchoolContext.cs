@@ -48,7 +48,11 @@ namespace DddEfCoreExample
                 x.Property(p => p.Email);
                 x.Property(p => p.Name);
                 x.HasOne(p => p.FavoriteCourse).WithMany();
-                x.HasMany(p => p.Enrollments).WithOne(p => p.Student);
+                x.HasMany(p => p.Enrollments).WithOne(p => p.Student)
+                    // one-to-many mapping sides:
+                    // one side = principal (= student)
+                    // many side = dependent (= enrollment)
+                    .Metadata.PrincipalToDependent.SetPropertyAccessMode(PropertyAccessMode.Field);
             });
 
             modelBuilder.Entity<Course>(x =>
