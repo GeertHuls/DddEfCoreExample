@@ -10,8 +10,10 @@ namespace DddEfCoreExample
     {
         static void Main(string[] args)
         {
-            string result2 = Execute(x => x.AddEnrollment(1, 2, Grade.A));
-            string result = Execute(x => x.CheckStudentFavoriteCourse(1, 2));
+            InitDatabase();
+
+            string enrollmentResult = Execute(x => x.EnrollStudent(1, 2, Grade.A));
+            string favoriteCourseCheckResult = Execute(x => x.CheckStudentFavoriteCourse(1, 2));
         }
 
         private static string Execute(Func<StudentController, string> func)
@@ -25,8 +27,10 @@ namespace DddEfCoreExample
             }
         }
 
-        private static void InitDatabase(string connectionString)
+        private static void InitDatabase()
         {
+            var connectionString = GetConnectionString();
+
             EnsureDatabase.For.SqlDatabase(connectionString);
 
             var upgrader =
