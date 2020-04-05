@@ -49,6 +49,7 @@ namespace DddEfCoreExample
                 x.Property(p => p.Name);
                 x.HasOne(p => p.FavoriteCourse).WithMany();
                 x.HasMany(p => p.Enrollments).WithOne(p => p.Student)
+                    .OnDelete(DeleteBehavior.Cascade)
                     // one-to-many mapping sides:
                     // one side = principal (= student)
                     // many side = dependent (= enrollment)
