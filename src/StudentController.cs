@@ -4,10 +4,13 @@ namespace DddEfCoreExample
     public sealed class StudentController
     {
         private readonly SchoolContext _context;
+        private readonly StudentRepository _repository;
+
 
         public StudentController(SchoolContext context)
         {
             _context = context;
+            _repository = new StudentRepository(context);
         }
 
         public string CheckStudentFavoriteCourse(long studentId, long courseId)
@@ -25,7 +28,7 @@ namespace DddEfCoreExample
 
         public string EnrollStudent(long studentId, long courseId, Grade grade)
         {
-            Student student = _context.Students.Find(studentId);
+            Student student = _repository.GetById(studentId);
             if (student == null)
                 return "Student not found";
 

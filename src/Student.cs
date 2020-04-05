@@ -28,7 +28,7 @@ namespace DddEfCoreExample
 
         public string EnrollIn(Course course, Grade grade)
         {
-            if (Enrollments.Any(x => x.Course == course))
+            if (_enrollments.Any(x => x.Course == course))
                 return $"Already enrolled in course '{course.Name}'";
             
             var enrollment = new Enrollment(course, this, grade);
