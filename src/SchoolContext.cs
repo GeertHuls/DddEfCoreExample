@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace DddEfCoreExample
@@ -60,7 +61,10 @@ namespace DddEfCoreExample
             {
                 x.ToTable("Course").HasKey(k => k.Id);
                 x.Property(p => p.Id).HasColumnName("CourseID");
-                x.Property(p => p.Name);
+                x.Property(p => p.Name)
+                    // This will prevent that the entity will be updated
+                    // while in detached mode on another entity.
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             });
 
             modelBuilder.Entity<Enrollment>(x =>
@@ -72,5 +76,18 @@ namespace DddEfCoreExample
                 x.Property(p => p.Grade);
             });
         }
+
+        // This will also prevent that the entity will be updated
+        // while in detached mode on another entity, is similar behavior
+        // as metadata SetAfterSaveBehavior.
+        //public override int SaveChanges()
+        //{
+        //    foreach (EntityEntry<Course> course in ChangeTracker.Entries<Course>())
+        //    {
+        //        course.State = EntityState.Unchanged;
+        //    }
+
+        //    return base.SaveChanges();
+        //}
     }
 }
