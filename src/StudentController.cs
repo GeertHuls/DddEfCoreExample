@@ -59,5 +59,20 @@ namespace DddEfCoreExample
 
             return "OK";
         }
+
+        public string RegisterStudent(
+            string name, string email, long favoriteCourseId, Grade favoriteCourseGrade)
+        {
+            Course favoriteCourse = Course.FromId(favoriteCourseId);
+            if (favoriteCourse == null)
+                return "Course not found";
+
+            var student = new Student(name, email, favoriteCourse, favoriteCourseGrade);
+
+            _repository.Save(student);
+            _context.SaveChanges();
+
+            return "OK";
+        }
     }
 }
