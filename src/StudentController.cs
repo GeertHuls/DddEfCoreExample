@@ -1,4 +1,6 @@
 
+using CSharpFunctionalExtensions;
+
 namespace DddEfCoreExample
 {
     public sealed class StudentController
@@ -67,7 +69,13 @@ namespace DddEfCoreExample
             if (favoriteCourse == null)
                 return "Course not found";
 
-            var student = new Student(name, email, favoriteCourse, favoriteCourseGrade);
+            Result<Email> result = Email.Create(email);
+            if (result.IsFailure)
+            {
+                return result.Error;
+            }
+
+            var student = new Student(name, result.Value, favoriteCourse, favoriteCourseGrade);
 
             _repository.Save(student);
             _context.SaveChanges();
@@ -86,8 +94,14 @@ namespace DddEfCoreExample
             if (favoriteCourse == null)
                 return "Course not found";
 
+            Result<Email> result = Email.Create(email);
+            if (result.IsFailure)
+            {
+                return result.Error;
+            }
+
             student.Name = name;
-            student.Email = email;
+            student.Email = result.Value;
             student.FavoriteCourse = favoriteCourse;
 
             var studentEntityState = _context.Entry(student).State;
