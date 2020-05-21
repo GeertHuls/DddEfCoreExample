@@ -5,7 +5,7 @@ namespace DddEfCoreExample
 {
     public class Student : Entity
     {
-        public string Name { get; set; }
+        public virtual Name Name { get; set; }
         public Email Email { get; set; }
         public virtual Course FavoriteCourse { get; set; }
 
@@ -16,7 +16,7 @@ namespace DddEfCoreExample
         {
         }
 
-        public Student(string name, Email email, Course favoriteCourse, Grade favoriteCourseGrade)
+        public Student(Name name, Email email, Course favoriteCourse, Grade favoriteCourseGrade)
             : this()
         {
             Name = name;

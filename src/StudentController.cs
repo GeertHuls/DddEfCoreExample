@@ -63,7 +63,7 @@ namespace DddEfCoreExample
         }
 
         public string RegisterStudent(
-            string name, string email, long favoriteCourseId, Grade favoriteCourseGrade)
+            Name name, string email, long favoriteCourseId, Grade favoriteCourseGrade)
         {
             Course favoriteCourse = Course.FromId(favoriteCourseId);
             if (favoriteCourse == null)
@@ -84,7 +84,7 @@ namespace DddEfCoreExample
         }
 
         public string EditPersonalInfo(
-            long studentId, string name, string email, long favoriteCourseId)
+            long studentId, Name name, string email, long favoriteCourseId)
         {
             Student student = _repository.GetById(studentId);
             if (student == null)

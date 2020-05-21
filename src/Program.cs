@@ -15,8 +15,10 @@ namespace DddEfCoreExample
             string disenrollmentResult = Execute(x => x.DisenrollStudent(1, 2));
             string favoriteCourseCheckResult = Execute(x => x.CheckStudentFavoriteCourse(1, 2));
             string enrollmentResult = Execute(x => x.EnrollStudent(1, 2, Grade.A));
-            string registerResult = Execute(x => x.RegisterStudent("Carl", "carl@gmail.com", 2, Grade.B));
-            string editResult = Execute(x => x.EditPersonalInfo(2, "Carl 2", "carl@gmail.com", 1));
+            string registerResult = Execute(x => x.RegisterStudent(
+                Name.Create("Carl", "Carlson").Value, "carl@gmail.com", 2, Grade.B));
+            string editResult = Execute(x => x.EditPersonalInfo(
+                2, Name.Create("Carl 2", "Carlson2").Value, "carl@gmail.com", 1));
         }
 
         private static string Execute(Func<StudentController, string> func)
