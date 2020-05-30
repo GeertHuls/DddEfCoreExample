@@ -1,11 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 
 namespace DddEfCoreExample
 {
     public sealed class SchoolContext : DbContext
     {
+        private static readonly Type[] EnumerationTypes = { typeof(Course), typeof(Suffix) };
+        
         private readonly string _connectionString;
         private readonly bool _useConsoleLogger;
 
@@ -52,8 +57,10 @@ namespace DddEfCoreExample
                 // by consequence the generated sql query will join the student table to itself.
                 x.OwnsOne(p => p.Name, p =>
                 {
+                    p.Property<long?>("NameSuffixID").HasColumnName("NameSuffixID");
                     p.Property(pp => pp.First).HasColumnName("FirstName");
                     p.Property(pp => pp.Last).HasColumnName("LastName");
+                    p.HasOne(pp => pp.Suffix).WithMany().HasForeignKey("NameSuffixID").IsRequired(false);
                 });
                 x.HasOne(p => p.FavoriteCourse).WithMany();
                 x.HasMany(p => p.Enrollments).WithOne(p => p.Student)
@@ -64,6 +71,13 @@ namespace DddEfCoreExample
                     .Metadata.PrincipalToDependent.SetPropertyAccessMode(PropertyAccessMode.Field);
             });
 
+            modelBuilder.Entity<Suffix>(x =>
+            {
+                x.ToTable("Suffix").HasKey(p => p.Id);
+                x.Property(p => p.Id).HasColumnName("SuffixID");
+                x.Property(p => p.Name);
+            });
+
             modelBuilder.Entity<Course>(x =>
             {
                 x.ToTable("Course").HasKey(k => k.Id);
@@ -71,7 +85,11 @@ namespace DddEfCoreExample
                 x.Property(p => p.Name)
                     // This will prevent that the entity will be updated
                     // while in detached mode on another entity.
-                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+                    // .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore)
+
+                    // Instead use the unchanged tracker enumeration
+                    // in the SaveChanges override below:
+                    ;
             });
 
             modelBuilder.Entity<Enrollment>(x =>
@@ -87,14 +105,17 @@ namespace DddEfCoreExample
         // This will also prevent that the entity will be updated
         // while in detached mode on another entity, is similar behavior
         // as metadata SetAfterSaveBehavior.
-        //public override int SaveChanges()
-        //{
-        //    foreach (EntityEntry<Course> course in ChangeTracker.Entries<Course>())
-        //    {
-        //        course.State = EntityState.Unchanged;
-        //    }
+        public override int SaveChanges()
+        {
+            IEnumerable<EntityEntry> enumerationEntries = ChangeTracker.Entries()
+                .Where(x => EnumerationTypes.Contains(x.Entity.GetType()));
 
-        //    return base.SaveChanges();
-        //}
+            foreach (EntityEntry enumerationEntry in enumerationEntries)
+            {
+                enumerationEntry.State = EntityState.Unchanged;
+            }
+
+            return base.SaveChanges();
+        }
     }
 }

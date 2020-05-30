@@ -63,12 +63,16 @@ namespace DddEfCoreExample
         }
 
         public string RegisterStudent(
-            string firstName, string lastName, string email,
+            string firstName, string lastName, long nameSuffixId, string email,
             long favoriteCourseId, Grade favoriteCourseGrade)
         {
             Course favoriteCourse = Course.FromId(favoriteCourseId);
             if (favoriteCourse == null)
                 return "Course not found";
+
+            Suffix suffix = Suffix.FromId(nameSuffixId);
+            if (suffix == null)
+                return "Suffix not found";
 
             Result<Email> emailResult = Email.Create(email);
             if (emailResult.IsFailure)
@@ -76,7 +80,7 @@ namespace DddEfCoreExample
                 return emailResult.Error;
             }
 
-            Result<Name> nameResult = Name.Create(firstName, lastName);
+            Result<Name> nameResult = Name.Create(firstName, lastName, suffix);
             if (nameResult.IsFailure)
                 return nameResult.Error;
 
@@ -90,7 +94,7 @@ namespace DddEfCoreExample
         }
 
         public string EditPersonalInfo(
-            long studentId, string firstName, string lastName,
+            long studentId, string firstName, string lastName, long nameSuffixId,
             string email, long favoriteCourseId)
         {
             Student student = _repository.GetById(studentId);
@@ -101,13 +105,17 @@ namespace DddEfCoreExample
             if (favoriteCourse == null)
                 return "Course not found";
 
+            Suffix suffix = Suffix.FromId(nameSuffixId);
+            if (suffix == null)
+                return "Suffix not found";
+
             Result<Email> emailResult = Email.Create(email);
             if (emailResult.IsFailure)
             {
                 return emailResult.Error;
             }
 
-            Result<Name> nameResult = Name.Create(firstName, lastName);
+            Result<Name> nameResult = Name.Create(firstName, lastName, suffix);
             if (nameResult.IsFailure)
                 return nameResult.Error;
 
