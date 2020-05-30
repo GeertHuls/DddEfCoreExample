@@ -25,7 +25,11 @@ namespace DddEfCoreExample
         {
             string connectionString = GetConnectionString();
 
-            using (var context = new SchoolContext(connectionString, true))
+            IBus bus = new Bus();
+            var messageBus = new MessageBus(bus);
+            var eventDispatcher = new EventDispatcher(messageBus);
+
+            using (var context = new SchoolContext(connectionString, true, eventDispatcher))
             {
                 var controller = new StudentController(context);
                 return func(controller);

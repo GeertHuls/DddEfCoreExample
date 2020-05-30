@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
 
 namespace DddEfCoreExample
 {
     public abstract class Entity
     {
+        private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
+        public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
+
         public long Id { get; }
 
         protected Entity()
@@ -14,6 +18,18 @@ namespace DddEfCoreExample
             : this()
         {
             Id = id;
+        }
+
+        // Typically only aggregate roots are the ones that dispatch the messages
+        // but in this example it's ok to let the entities handle this.
+        protected void RaiseDomainEvent(IDomainEvent domainEvent)
+        {
+            _domainEvents.Add(domainEvent);
+        }
+
+        public void ClearDomainEvents()
+        {
+            _domainEvents.Clear();
         }
 
         public override bool Equals(object obj)

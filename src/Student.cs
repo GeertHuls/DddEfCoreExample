@@ -57,6 +57,11 @@ namespace DddEfCoreExample
             if (favoriteCourse == null)
                 throw new ArgumentNullException();
 
+            if (Email != email)
+            {
+                RaiseDomainEvent(new StudentEmailChangedEvent(Id, email));
+            }
+
             Name = name;
             Email = email;
             FavoriteCourse = favoriteCourse;
