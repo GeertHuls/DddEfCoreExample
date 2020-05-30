@@ -111,12 +111,11 @@ namespace DddEfCoreExample
             if (nameResult.IsFailure)
                 return nameResult.Error;
 
-            student.Name = nameResult.Value;
-            student.Email = emailResult.Value;
-            student.FavoriteCourse = favoriteCourse;
+            student.EditPersonalInfo(nameResult.Value, emailResult.Value, favoriteCourse);
 
-            var studentEntityState = _context.Entry(student).State;
-            var favoriteCourseEntityState = _context.Entry(student.FavoriteCourse).State;
+            // for debugging purposes only:
+            // var studentEntityState = _context.Entry(student).State;
+            // var favoriteCourseEntityState = _context.Entry(student.FavoriteCourse).State;
             // var enrollmentEntityState = _context.Entry(student.Enrollments[0]).State;
             // var courseEntityState = _context.Entry(student.Enrollments[0].Course).State;
 
