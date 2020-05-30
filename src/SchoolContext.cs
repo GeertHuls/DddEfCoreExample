@@ -48,6 +48,8 @@ namespace DddEfCoreExample
                 x.Property(p => p.Id).HasColumnName("StudentID");
                 x.Property(p => p.Email)
                     .HasConversion(p => p.Value, p => Email.Create(p).Value);
+                // This is an owned entity wich is treated as an external table by ef and
+                // by consequence the generated sql query will join the student table to itself.
                 x.OwnsOne(p => p.Name, p =>
                 {
                     p.Property(pp => pp.First).HasColumnName("FirstName");
